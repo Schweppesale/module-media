@@ -1,0 +1,24 @@
+{
+    "name": "Media",
+    "alias": "media",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "migration": {
+        "path": "src/Application/Database/Migrations",
+        "seeds": [
+            "Schweppesale\\Module\\Access\\Application\\Database\\Seeds\\MediaDatabaseSeeder"
+        ]
+    },
+    "providers": [
+        "Schweppesale\\Module\\Access\\Application\\Providers\\ApplicationServiceProvider",
+        "Schweppesale\\Module\\Access\\Presentation\\Providers\\PresentationServiceProvider",
+        "LaravelDoctrine\\ORM\\DoctrineServiceProvider",
+        "LaravelDoctrine\\ACL\\AclServiceProvider"
+    ],
+    "aliases": [],
+    "files": [
+        "src\/Presentation\/Http\/routes.php"
+    ]
+}
