@@ -1,0 +1,82 @@
+Schweppesale\Module\Media\Domain\Entities\File:
+    type: entity
+    table: files
+    id:
+        id:
+            type: integer
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        userId:
+            type: integer
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: user_id
+        disk:
+            type: string
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: disk
+        createdAt:
+            type: datetime
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: created_at
+        path:
+            type: string
+            scale: 0
+            length: null
+            unique: true
+            nullable: false
+            precision: 0
+            column: path
+        hash:
+            type: string
+            scale: 0
+            length: null
+            unique: true
+            nullable: false
+            precision: 0
+            column: hash
+        size:
+            type: string
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: size
+        mimeType:
+            type: string
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: mime_type
+        updatedAt:
+            type: datetime
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: updated_at
+    lifecycleCallbacks:
+        preUpdate:
+            - preUpdate

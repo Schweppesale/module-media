@@ -1,0 +1,19 @@
+Schweppesale\Module\Media\Application\Response\FileDTO:
+    properties:
+        disk:
+            exclude: true
+        userId:
+            exclude: true
+        path:
+            exclude: true
+    relations:
+        -
+            rel: creator
+            href:
+                route: users.show
+                parameters:
+                    user: expr(object.getUserId())
+                xmlElementName: creator
+                absolute: true
+            exclusion:
+                exclude_if: expr(object.getUserId() == false)

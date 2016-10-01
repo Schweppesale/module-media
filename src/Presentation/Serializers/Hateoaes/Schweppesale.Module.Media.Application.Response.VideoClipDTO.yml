@@ -1,0 +1,29 @@
+Schweppesale\Module\Media\Application\Response\VideoClipDTO:
+    properties:
+        videoId:
+            exclude: true
+    relations:
+        -
+            rel: self
+            href:
+                route: video-clips.show
+                parameters:
+                    user: expr(object.getId())
+                absolute: true
+        -
+            rel: video
+            href:
+                route: videos.show
+                parameters:
+                    video: expr(object.getVideoId())
+                absolute: true
+        -
+            rel: creator
+            href:
+                route: users.show
+                parameters:
+                    user: expr(object.getUserId())
+                xmlElementName: creator
+                absolute: true
+            exclusion:
+                exclude_if: expr(object.getUserId() == false)

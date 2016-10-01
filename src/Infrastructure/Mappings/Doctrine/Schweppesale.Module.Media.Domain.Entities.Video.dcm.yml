@@ -1,0 +1,60 @@
+Schweppesale\Module\Media\Domain\Entities\Video:
+    type: entity
+    table: videos
+    id:
+        id:
+            type: integer
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        title:
+            type: string
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: title
+        sourceId:
+            type: string
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: source_id
+        createdAt:
+            type: datetime
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: created_at
+        updatedAt:
+            type: datetime
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: updated_at
+    oneToOne:
+        file:
+            targetEntity: Schweppesale\Module\Media\Domain\Entities\File
+            cascade: [ ]
+            fetch: EAGER
+            mappedBy: null
+            inversedBy: null
+            joinColumn:
+              name: file_id
+              referencedColumnName: id
+    lifecycleCallbacks:
+        preUpdate:
+            - preUpdate

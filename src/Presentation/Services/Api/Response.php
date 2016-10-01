@@ -7,7 +7,7 @@ use JMS\Serializer\SerializerInterface;
 
 /**
  * Class Response
- * @package Schweppesale\Module\Access\Presentation\Services\Api
+ * @package Schweppesale\Module\Media\Presentation\Services\Api
  */
 class Response
 {

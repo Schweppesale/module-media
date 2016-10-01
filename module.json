@@ -8,12 +8,12 @@
     "migration": {
         "path": "src/Application/Database/Migrations",
         "seeds": [
-            "Schweppesale\\Module\\Access\\Application\\Database\\Seeds\\MediaDatabaseSeeder"
+            "Schweppesale\\Module\\Media\\Application\\Database\\Seeds\\MediaDatabaseSeeder"
         ]
     },
     "providers": [
-        "Schweppesale\\Module\\Access\\Application\\Providers\\ApplicationServiceProvider",
-        "Schweppesale\\Module\\Access\\Presentation\\Providers\\PresentationServiceProvider",
+        "Schweppesale\\Module\\Media\\Application\\Providers\\ApplicationServiceProvider",
+        "Schweppesale\\Module\\Media\\Presentation\\Providers\\PresentationServiceProvider",
         "LaravelDoctrine\\ORM\\DoctrineServiceProvider",
         "LaravelDoctrine\\ACL\\AclServiceProvider"
     ],

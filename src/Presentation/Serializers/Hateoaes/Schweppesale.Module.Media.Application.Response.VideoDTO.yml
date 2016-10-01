@@ -1,0 +1,48 @@
+Schweppesale\Module\Media\Application\Response\VideoDTO:
+    properties:
+        clips:
+            exclude: true
+        file:
+            exclude: true
+        sourceId:
+            exclude: true
+    relations:
+        -
+            rel: self
+            href:
+                route: videos.show
+                parameters:
+                    user: expr(object.getId())
+                absolute: true
+        -
+            rel: source
+            href:
+                route: video.show
+                parameters:
+                    video: expr(object.getSourceId())
+                xmlElementName: source
+            exclusion:
+                exclude_if: expr(object.getSourceId() == false)
+        -
+            rel: file
+            embedded:
+                content: expr(object.getFile())
+                xmlElementName: file
+            exclusion:
+                exclude_if: expr(object.getFile() == false)
+        -
+            rel: clips
+            href:
+                route: videos.clips.index
+                parameters:
+                    video: expr(object.getId())
+                xmlElementName: clips
+                absolute: true
+            exclusions:
+                exclude_if: expr(object.getClips() == false)
+#            rel: clips
+#            embedded:
+#                content: expr(object.getClips())
+#                xmlElementName: clips
+#            exclusion:
+#                exclude_if: expr(object.getClips() == false)

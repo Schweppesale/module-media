@@ -1,32 +1,24 @@
-<?php namespace Schweppesale\Module\Access\Application\Providers;
+<?php namespace Schweppesale\Module\Media\Application\Providers;
 
-use LaravelDoctrine\ORM\Auth\DoctrineUserProvider;
+use Papper\MemberOption\Ignore;
 use Papper\Papper;
-use Schweppesale\Module\Access\Application\Response\GroupDTO;
-use Schweppesale\Module\Access\Application\Response\OrganisationDTO;
-use Schweppesale\Module\Access\Application\Response\PermissionDTO;
-use Schweppesale\Module\Access\Application\Response\RoleDTO;
-use Schweppesale\Module\Access\Application\Response\UserDTO;
-use Schweppesale\Module\Access\Domain\Entities\Group;
-use Schweppesale\Module\Access\Domain\Entities\Organisation;
-use Schweppesale\Module\Access\Domain\Entities\Permission;
-use Schweppesale\Module\Access\Domain\Entities\Role;
-use Schweppesale\Module\Access\Domain\Entities\User;
-use Schweppesale\Module\Access\Domain\Repositories\GroupRepository as GroupRepositoryInterface;
-use Schweppesale\Module\Access\Domain\Repositories\OrganisationRepository as OrganisationRepositoryInterface;
-use Schweppesale\Module\Access\Domain\Repositories\PermissionRepository as PermissionRepositoryInterface;
-use Schweppesale\Module\Access\Domain\Repositories\RoleRepository as RoleRepositoryInterface;
-use Schweppesale\Module\Access\Domain\Repositories\UserRepository as UserRepositoryInterface;
-use Schweppesale\Module\Access\Domain\Services\PasswordHasher;
-use Schweppesale\Module\Access\Infrastructure\Repositories\Group\GroupRepositoryDoctrine;
-use Schweppesale\Module\Access\Infrastructure\Repositories\Organisation\OrganisationRepositoryDoctrine;
-use Schweppesale\Module\Access\Infrastructure\Repositories\Permission\PermissionRepositoryDoctrine;
-use Schweppesale\Module\Access\Infrastructure\Repositories\Role\RoleRepositoryDoctrine;
-use Schweppesale\Module\Access\Infrastructure\Repositories\User\UserRepositoryDoctrine;
-use Schweppesale\Module\Access\Infrastructure\Services\PasswordHasher\PasswordHasherBcrypt;
 use Schweppesale\Module\Core\Mapper\MapperInterface;
 use Schweppesale\Module\Core\Mapper\Papper\Mapper;
+use Schweppesale\Module\Media\Application\Response\FileDTO;
+use Schweppesale\Module\Media\Application\Response\VideoClipDTO;
+use Schweppesale\Module\Media\Application\Response\VideoDTO;
+use Schweppesale\Module\Media\Domain\Entities\File;
+use Schweppesale\Module\Media\Domain\Entities\Video;
+use Schweppesale\Module\Media\Domain\Entities\VideoClip;
+use Schweppesale\Module\Media\Domain\Repositories\FileRepository;
+use Schweppesale\Module\Media\Domain\Repositories\VideoClipRepository;
+use Schweppesale\Module\Media\Domain\Repositories\VideoRepository;
 use Schweppesale\Module\Core\Providers\Laravel\ServiceProvider;
+use Schweppesale\Module\Media\Domain\Services\FileManager;
+use Schweppesale\Module\Media\Infrastructure\Repositories\FileRepositoryDoctrine;
+use Schweppesale\Module\Media\Infrastructure\Repositories\VideoClipRepositoryDoctrine;
+use Schweppesale\Module\Media\Infrastructure\Repositories\VideoRepositoryDoctrine;
+use Schweppesale\Module\Media\Infrastructure\Services\FileManagerFlySystem;
 
 class ApplicationServiceProvider extends ServiceProvider
 {
@@ -47,8 +39,8 @@ class ApplicationServiceProvider extends ServiceProvider
     {
         $this->registerConfig();
         $this->registerRepositories();
-        $this->registerFacade();
         $this->registerMappings();
+        $this->registerServices();
     }
 
     /**
@@ -71,18 +63,54 @@ class ApplicationServiceProvider extends ServiceProvider
         );
     }
 
-    /**
-     * Register the vault facade without the user having to add it to the app.php file.
-     *
-     * @return void
-     */
-    public function registerFacade()
-    {
-    }
-
     public function registerMappings()
     {
         $this->app->singleton(MapperInterface::class, Mapper::class);
+
+        Papper::createMap(File::class, FileDTO::class)
+            ->ignoreAllNonExisting()
+            ->constructUsing(function (File $file) {
+                return new FileDTO(
+                    $file->getId(),
+                    $file->getUserId(),
+                    $file->getHash(),
+                    $file->getDisk(),
+                    $file->getPath(),
+                    $file->getSize(),
+                    $file->getMimeType(),
+                    $file->getCreatedAt(),
+                    $file->getUpdatedAt()
+                );
+            });
+
+        Papper::createMap(Video::class, VideoDTO::class)
+            ->ignoreAllNonExisting()
+            ->constructUsing(function (Video $video) {
+                $file = Papper::map($video->getFile(), File::class)->toType(FileDTO::class);
+                return new VideoDTO(
+                    $video->getId(),
+                    $file,
+                    $video->getTitle(),
+                    $video->getSourceId(),
+                    $video->getCreatedAt(),
+                    $video->getUpdatedAt()
+                );
+            });
+
+        Papper::createMap(VideoClip::class, VideoClipDTO::class)
+            ->ignoreAllNonExisting()
+            ->constructUsing(function (VideoClip $clip) {
+                return new VideoClipDTO(
+                    $clip->getId(),
+                    $clip->getVideo()->getId(),
+                    $clip->getTitle(),
+                    $clip->getUserId(),
+                    $clip->getStartTime(),
+                    $clip->getEndTime(),
+                    $clip->getCreatedAt(),
+                    $clip->getUpdatedAt()
+                );
+            });
     }
 
     /**
@@ -90,6 +118,13 @@ class ApplicationServiceProvider extends ServiceProvider
      */
     public function registerRepositories()
     {
+        $this->app->bind(FileRepository::class, FileRepositoryDoctrine::class);
+        $this->app->bind(VideoRepository::class, VideoRepositoryDoctrine::class);
+        $this->app->bind(VideoClipRepository::class, VideoClipRepositoryDoctrine::class);
+    }
 
+    public function registerServices()
+    {
+        $this->app->bind(FileManager::class, FileManagerFlySystem::class);
     }
 }

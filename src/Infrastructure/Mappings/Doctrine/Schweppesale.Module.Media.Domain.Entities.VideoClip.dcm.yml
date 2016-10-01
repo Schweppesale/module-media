@@ -1,0 +1,73 @@
+Schweppesale\Module\Media\Domain\Entities\VideoClip:
+    type: entity
+    table: video_clips
+    id:
+        id:
+            type: integer
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        title:
+            type: string
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: title
+        userId:
+            type: integer
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: user_id
+        startTime:
+            type: integer
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: start_time
+        endTime:
+            type: integer
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: end_time
+        createdAt:
+            type: datetime
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: created_at
+        updatedAt:
+            type: datetime
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: updated_at
+    manyToOne:
+        video:
+            targetEntity: Schweppesale\Module\Media\Domain\Entities\Video
+            cascade: [ ]
+            fetch: EAGER
+            mappedBy: null
+            inversedBy: null
+            joinColumn:
+              name: video_id
+              referencedColumnName: id
